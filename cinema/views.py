@@ -8,6 +8,8 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ReadOnlyModelViewSet
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+
 
 from cinema.models import Genre, Actor, CinemaHall, Movie, MovieSession, Order
 from cinema.permissions import IsAdminOrIfAuthenticatedReadOnly
@@ -25,6 +27,8 @@ from cinema.serializers import (
     OrderSerializer,
     OrderListSerializer,
     MovieImageSerializer,
+    MovieFilterSerializer,
+    MovieSessionFilterSerializer,
 )
 
 
@@ -110,6 +114,13 @@ class MovieViewSet(
 
         return MovieSerializer
 
+    @extend_schema(
+        parameters=[MovieFilterSerializer],
+        responses=MovieListSerializer
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
     @action(
         methods=["POST"],
         detail=True,
@@ -166,6 +177,13 @@ class MovieSessionViewSet(viewsets.ModelViewSet):
             return MovieSessionDetailSerializer
 
         return MovieSessionSerializer
+
+    @extend_schema(
+        parameters=[MovieSessionFilterSerializer],
+        responses=MovieSessionListSerializer
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 class OrderPagination(PageNumberPagination):
