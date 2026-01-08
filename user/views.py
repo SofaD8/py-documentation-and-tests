@@ -12,7 +12,6 @@ class CreateUserView(generics.CreateAPIView):
 
 class CreateTokenView(TokenObtainPairView):
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
-    serializer_class = AuthTokenSerializer
 
 
 class ManageUserView(generics.RetrieveUpdateAPIView):
